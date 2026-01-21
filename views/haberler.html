@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TamŞarj | Haberler</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon-green: #2ecc71; --dark-bg: #000; --card-bg: #111; }
+        html { overflow-y: scroll; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--dark-bg); color: #fff; margin: 0; padding-bottom: 50px; }
+        .navbar { background: #000; border-bottom: 2px solid var(--neon-green); height: 80px; }
+        .navbar-brand { font-size: 2.5rem !important; letter-spacing: 8px; font-weight: 900; color: #fff !important; }
+        .header-section { padding: 40px 0; text-align: center; }
+        .neon-text { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); font-weight: 900; }
+        .news-card { background: var(--card-bg); border: 1px solid #333; border-radius: 20px; overflow: hidden; margin-bottom: 40px; }
+        .news-img-container { padding: 0; display: flex; align-items: center; justify-content: center; background: #050505; }
+        .news-img { width: 100%; height: auto; max-width: 100%; display: block; object-fit: contain; }
+        .news-body { padding: 30px; display: flex; flex-direction: column; justify-content: center; }
+        .news-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .news-content { color: #ccc; font-size: 1.05rem; line-height: 1.7; text-align: justify; }
+        #userInfo { position: fixed; top: 90px; left: 20px; background: rgba(34,34,34,0.9); color: #0f0; padding: 10px 20px; border-radius: 50px; font-size: 13px; z-index: 9999; border: 1px solid #0f0; display: none; }
+    </style>
+</head>
+<body>
+    <div id="userInfo"></div>
+    <nav class="navbar navbar-dark p-2 px-5 d-flex justify-content-between align-items-center">
+        <a class="navbar-brand text-decoration-none" href="index.html">⚡ ŞARJ</a>
+        <a href="index.html" class="btn btn-outline-success rounded-pill px-4 fw-bold">ANA SAYFA</a>
+    </nav>
+    <div class="header-section container">
+        <h1 class="neon-text">GÜNCEL HABERLER</h1>
+    </div>
+    <div class="container">
+        <div id="news-container">
+            <div class="news-card row g-0">
+                <div class="col-md-5 news-img-container">
+                    <img src="haber1.png" class="news-img" alt="Tesla Model Y">
+                </div>
+                <div class="col-md-7 news-body">
+                    <h2 class="news-title">Avrupa'da en çok satılan elektrikli araç Tesla Model Y oldu!</h2>
+                    <p class="news-content">Tesla'nın Avrupa'da satış yapamadığı yönündeki iddiaların aksine 2025 ilk yarısında yaklaşık 70 bin adetlik satışla ilk sırada Model Y yer aldı. Yeni versiyona geçiş sebebiyle üretimi durdurulan Model Y'de eski üretim kapasitesine ulaşılması epeyi zaman almıştı. Buna rağmen yılın ilk yarısı 2024'e kıyasla %30 civarında düşüşle kapatılmış oldu. İkinci sıradaki Volkswagen ID.4 40.946 adet satışa ulaşırken Model 3 ise 39.384 satışla üçüncü sıraya yerleşti.</p>
+                </div>
+            </div>
+            <div class="news-card row g-0">
+                <div class="col-md-5 news-img-container">
+                    <img src="haber2.1.png" class="news-img" alt="Mercedes Electric">
+                </div>
+                <div class="col-md-7 news-body">
+                    <h2 class="news-title">Mercedes'ten 10 yeni elektrikli otomobil geliyor!</h2>
+                    <p class="news-content">Mercedes-Benz, 2026'da en az 18 yeni model piyasaya süreceğini ve bunların 10'unun elektrikli olacağını açıkladı. Motor1'in paylaştığı habere göre tarihindeki en geniş kapsamlı yeni model planını ortaya koyan firma, üst segmentte AMG.EA platformunda geliştirdiği spor otomobilin yanı sıra ciddi bir yenilenmeye hazırlanıyor. Orta segmentte elektrikli GLC'nin ardından C serisi bir elektrikli sedanın da gün yüzüne çıkmasına kesin gözüyle bakılırken giriş seviyede ise EQA ve EQB'nin hem tasarım hem de donanımsal değişime gitmesi bekleniyor. 2025 ilk yarısında yıllık bazda satış hacmi %6,2'lik düşüş yaşayan Mercedes, 2026'da 18, 2027'de ise 14 modellik lansman takvimiyle düşen müşteri talebini yeniden canlandırmayı ümit ediyor.</p>
+                </div>
+            </div>
+            <div class="news-card row g-0">
+                <div class="col-md-5 news-img-container">
+                    <img src="haber3.1.png" class="news-img" alt="MG4 Solid State">
+                </div>
+                <div class="col-md-7 news-body">
+                    <h2 class="news-title">Dünyanın ilk yarı katı hâl bataryalı seri üretim otomobili tanıtıldı!</h2>
+                    <p class="news-content">Çinli otomobil üreticisi SAIC Motor, Qingtao New Energy ile birlikte geliştirdiği yarı katı hâl bataryalı MG4'ü resmen gün yüzüne çıkardı. Sıvı elektrolitin oranını %25'ten %5 seviyesine düşürerek hem çok daha yüksek enerji yoğunluğu, hem daha hızlı şarj, hem de yüksek güvenlik sağlayan SAIC, 10.300 dolarlık başlangıç fiyatıyla MG4'ü şasiye entegre batarya paketiyle üretmeyi de başarmış. Bu fiyat seviyesindeki ilk CTB (cell-to-body) bataryalı otomobil olan MG4, 163 beygir gücünde önden çekişli motor, 42,8/53,9 kWh LFP batarya, 437/530 km CLTC menzil, %30'dan %80'e 20 dakikada şarj performansı ve Oppo işletim sistemiyle geliyor. Yeni MG4'ün bataryadan sonra en dikkat çeken özelliği ise HeatMatrix adı verilen ısı pompalı gelişmiş termal yönetim sistemi. Aracın tasarımında yapılan aerodinamik değişiklikler neticesinde tüketimin 10,4 kWh/100 km seviyesinde olacağı iddia ediliyor.</p>
+                </div>
+            </div>
+            <div class="news-card row g-0">
+                <div class="col-md-5 news-img-container">
+                    <img src="haber4.png" class="news-img" alt="Togg">
+                </div>
+                <div class="col-md-7 news-body">
+                    <h2 class="news-title">Yerli otomobil Almanya'da satışa çıkıyor! ÖTV yüzünden Türkiye'den daha ucuz olacak!</h2>
+                    <p class="news-content">Yerli otomobil üreticisi Togg, 9 Eylül'de başlayacak IAA Mobility'de Almanya satış ve teslimat tarihini açıklayacak. Automotive News Europe'un haberine göre, Almanya'dan sonra Hollanda, Fransa, İsveç, İtalya gibi diğer Avrupa ülkelerinde de satışa başlanması planlanıyor. Haberde ayrıca Togg T10X'in EuroNCAP tarafından resmen değerlendirildiği de paylaşıldı. Aracın yeni eklenen aktif sürüş güvenliği özellikleri sayesinde beş yıldızlık bir skor hedeflediği biliniyor. Sene sonuna kadar hem T10X hem de T10F'yi ihraç etmeye başlayacak Togg, Türkiye'de %10'dan %25'e çıkan ÖTV yüzünden yurt dışındaki müşterilere daha uygun fiyattan satılacak.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    fetch('/api/kullanici').then(r => r.json()).then(user => {
+        if(user.ad) {
+            const box = document.getElementById('userInfo');
+            box.style.display = 'block';
+            box.innerText = `👤 ${user.ad} | ${user.arac} (${user.yil})`;
+        }
+    }).catch(() => {});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TamŞarj | Teknik Analiz Merkezi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #0b0e11; color: #fff; padding: 20px 0; }
+        .glass-card { 
+            background: rgba(25, 28, 31, 0.95); 
+            border: 1px solid #32383e; 
+            border-radius: 24px; padding: 25px; margin-bottom: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .neon-text { color: #2ecc71; text-shadow: 0 0 8px rgba(46, 204, 113, 0.4); font-weight: 900; }
+        .car-selector-box { background: #1c2126; border-radius: 15px; padding: 15px; border-left: 5px solid #2ecc71; }
+        .car-img { width: 100%; height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
+        
+        .spec-group-title { font-size: 0.85rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .spec-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .spec-label { color: #bdc3c7; font-size: 0.9rem; }
+        .spec-value { font-weight: 600; font-size: 0.95rem; }
+        
+        .price-box { padding: 15px; border-radius: 15px; text-align: center; }
+        .price-1 { background: rgba(46, 204, 113, 0.1); border: 1px solid #2ecc71; }
+        .price-2 { background: rgba(52, 152, 219, 0.1); border: 1px solid #3498db; }
+        .price-val { font-size: 1.8rem; font-weight: 900; display: block; }
+        .chart-container { position: relative; height: 280px; width: 100%; }
+        select.form-select { background-color: #2c3e50; color: white; border: none; border-radius: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="container-fluid px-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h1 class="neon-text m-0">TEKNİK ANALİZ MERKEZİ</h1>
+            <p class="text-secondary small">Sistemdeki 13 araç modelinin detaylı kıyaslaması</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="/" class="btn btn-outline-light rounded-pill px-4">← Ana Sayfa</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="glass-card">
+                <div class="car-selector-box mb-4">
+                    <select id="car1" class="form-select mb-3" onchange="updateComparison()"></select>
+                    <img id="img1" src="" class="car-img">
+                    <div class="price-box price-1 mt-3">
+                        <small class="text-secondary">1. ARAÇ FİYATI</small>
+                        <span id="p1" class="price-val text-success">0 ₺</span>
+                    </div>
+                </div>
+                <div class="car-selector-box">
+                    <select id="car2" class="form-select mb-3" onchange="updateComparison()"></select>
+                    <img id="img2" src="" class="car-img">
+                    <div class="price-box price-2 mt-3">
+                        <small class="text-secondary">2. ARAÇ FİYATI</small>
+                        <span id="p2" class="price-val text-info">0 ₺</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="glass-card">
+                <h6 class="text-center text-secondary text-uppercase mb-3">Performans Dengesi</h6>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+            <div class="glass-card">
+                <h6 class="text-center text-secondary text-uppercase mb-3">Menzil & Batarya (km/kWh)</h6>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="glass-card h-100">
+                <h5 class="neon-text mb-4">VERİ KIYASLAMASI</h5> 
+                <div class="spec-group">
+                    <div class="spec-group-title">Performans</div>
+                    <div class="spec-item"><span class="spec-label">Beygir Gücü</span><span id="hpData" class="spec-value">-</span></div>
+                    <div class="spec-item"><span class="spec-label">0-100 Hızlanma</span><span id="accelData" class="spec-value">-</span></div>
+                    <div class="spec-item"><span class="spec-label">Maks. Hız</span><span id="speedData" class="spec-value">-</span></div>
+                </div>
+                <div class="spec-group mt-4">
+                    <div class="spec-group-title">Enerji</div>
+                    <div class="spec-item"><span class="spec-label">Batarya</span><span id="batteryData" class="spec-value">-</span></div>
+                    <div class="spec-item"><span class="spec-label">Şarj Hızı (DC)</span><span id="chargeData" class="spec-value">-</span></div>
+                    <div class="spec-item"><span class="spec-label">WLTP Menzil</span><span id="rangeData" class="spec-value">-</span></div>
+                </div>
+                <div class="spec-group mt-4">
+                    <div class="spec-group-title">Kapasite</div>
+                    <div class="spec-item"><span class="spec-label">Bagaj</span><span id="luggageData" class="spec-value">-</span></div>
+                    <div class="spec-item"><span class="spec-label">Ağırlık</span><span id="weightData" class="spec-value">-</span></div>
+                    <div class="spec-item"><span class="spec-label">Çekiş</span><span id="driveData" class="spec-value">-</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const db = {
+        "hero-bg": { name: "Tesla Model Y", range: 533, accel: 5.0, speed: 217, hp: 514, battery: 75, charge: 250, lug: 854, weight: 1979, drive: "AWD", price: 2850000 },
+        "togg-t10x": { name: "Togg T10X", range: 523, accel: 7.8, speed: 185, hp: 218, battery: 88, charge: 180, lug: 441, weight: 2126, drive: "RWD", price: 1820000 },
+        "porsche-taycan": { name: "Porsche Taycan", range: 460, accel: 4.0, speed: 230, hp: 408, battery: 79, charge: 270, lug: 407, weight: 2050, drive: "RWD", price: 7500000 },
+        "iqoniq5": { name: "Hyundai IONIQ 5", range: 507, accel: 5.1, speed: 185, hp: 325, battery: 77, charge: 350, lug: 527, weight: 2045, drive: "AWD", price: 2600000 },
+        "ioniq6": { name: "Hyundai IONIQ 6", range: 607, accel: 5.1, speed: 185, hp: 325, battery: 87, charge: 350, lug: 527, weight: 2045, drive: "AWD", price: 3600000 },
+        "bmw-i4": { name: "BMW i4", range: 590, accel: 5.7, speed: 190, hp: 340, battery: 84, charge: 200, lug: 470, weight: 2125, drive: "RWD", price: 3800000 },
+        "mercedes-eqs": { name: "Mercedes EQS", range: 780, accel: 4.3, speed: 210, hp: 523, battery: 108, charge: 200, lug: 610, weight: 2510, drive: "AWD", price: 8200000 },
+        "e-tron": { name: "Audi Q4 e-tron", range: 520, accel: 6.2, speed: 180, hp: 299, battery: 77, charge: 135, lug: 520, weight: 2140, drive: "AWD", price: 3600000 },
+        "kia-ev6": { name: "Kia EV6", range: 528, accel: 5.2, speed: 188, hp: 325, battery: 77, charge: 350, lug: 520, weight: 2015, drive: "AWD", price: 3200000 },
+        "ex40": { name: "Volvo XC40", range: 418, accel: 4.9, speed: 180, hp: 408, battery: 78, charge: 150, lug: 413, weight: 2188, drive: "AWD", price: 2900000 },
+        "zoe": { name: "Renault Zoe", range: 395, accel: 9.5, speed: 140, hp: 135, battery: 52, charge: 50, lug: 338, weight: 1502, drive: "RWD", price: 1350000 },
+        "et5": { name: "Skywell ET5", range: 520, accel: 7.9, speed: 150, hp: 204, battery: 72, charge: 80, lug: 467, weight: 1880, drive: "FWD", price: 1650000 },
+        "500e": { name: "Fiat 500e", range: 320, accel: 9.0, speed: 150, hp: 118, battery: 42, charge: 85, lug: 185, weight: 1365, drive: "FWD", price: 1250000 }
+    };
+    let radarChart, barChart;
+    window.onload = () => {
+        const s1 = document.getElementById('car1');
+        const s2 = document.getElementById('car2');
+        Object.keys(db).forEach(id => {
+            s1.add(new Option(db[id].name, id));
+            s2.add(new Option(db[id].name, id));
+        });
+        s2.selectedIndex = 1;
+        initCharts();
+        updateComparison();
+    };
+    function initCharts() {
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        radarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Menzil', 'Performans', 'Hız', 'Güç', 'Şarj'],
+                datasets: [
+                    { label: 'Araç 1', data: [0,0,0,0,0], borderColor: '#2ecc71', backgroundColor: 'rgba(46, 204, 113, 0.2)', borderWidth: 2 },
+                    { label: 'Araç 2', data: [0,0,0,0,0], borderColor: '#3498db', backgroundColor: 'rgba(52, 152, 219, 0.2)', borderWidth: 2 }
+                ]
+            },
+            options: { scales: { r: { grid: { color: '#333' }, pointLabels: { color: '#aaa' }, ticks: { display: false } } }, plugins: { legend: { labels: { color: '#fff' } } } }
+        });
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Menzil (km)', 'Batarya (kWh)'],
+                datasets: [{ label: 'Araç 1', backgroundColor: '#2ecc71', data: [0,0] }, { label: 'Araç 2', backgroundColor: '#3498db', data: [0,0] }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
+        });
+    }
+    function updateComparison() {
+        const id1 = document.getElementById('car1').value;
+        const id2 = document.getElementById('car2').value;
+        const v1 = db[id1];
+        const v2 = db[id2];
+        document.getElementById('img1').src = `/${id1}.png`;
+        document.getElementById('img2').src = `/${id2}.png`;
+        document.getElementById('p1').innerText = v1.price.toLocaleString('tr-TR') + " ₺";
+        document.getElementById('p2').innerText = v2.price.toLocaleString('tr-TR') + " ₺";
+        setVal('hpData', v1.hp, v2.hp, ' hp');
+        setVal('accelData', v1.accel, v2.accel, ' sn', true);
+        setVal('speedData', v1.speed, v2.speed, ' km/h');
+        setVal('batteryData', v1.battery, v2.battery, ' kWh');
+        setVal('chargeData', v1.charge, v2.charge, ' kW');
+        setVal('rangeData', v1.range, v2.range, ' km');
+        setVal('luggageData', v1.lug, v2.lug, ' Lt');
+        setVal('weightData', v1.weight, v2.weight, ' kg', true);
+        document.getElementById('driveData').innerHTML = `<span class="text-success">${v1.drive}</span> / <span class="text-info">${v2.drive}</span>`;
+        radarChart.data.datasets[0].label = v1.name;
+        radarChart.data.datasets[1].label = v2.name;
+        radarChart.data.datasets[0].data = [v1.range/8, (12-v1.accel)*8, v1.speed/2.5, v1.hp/6, v1.charge/3.5];
+        radarChart.data.datasets[1].data = [v2.range/8, (12-v2.accel)*8, v2.speed/2.5, v2.hp/6, v2.charge/3.5];
+        radarChart.update();
+        barChart.data.datasets[0].data = [v1.range, v1.battery];
+        barChart.data.datasets[1].data = [v2.range, v2.battery];
+        barChart.update();
+    }
+
+    function setVal(id, val1, val2, unit, inv = false) {
+        const win = inv ? val1 < val2 : val1 > val2;
+        document.getElementById(id).innerHTML = `
+            <span class="${win ? 'text-success' : 'text-white'}">${val1}${unit}</span>
+            <span class="mx-2 text-secondary">|</span>
+            <span class="${!win ? 'text-info' : 'text-white'}">${val2}${unit}</span>
+        `;
+    }
+</script>
+</body>
+<div id="userInfo" style="position:fixed; top:10px; left:10px; background:#222; color:#0f0; padding:10px; border-radius:10px; font-size:12px; z-index:9999; border:1px solid #0f0; display:none;"></div>
+<script>
+    fetch('/api/kullanici').then(r => r.json()).then(user => {
+        if(user.ad) {
+            const box = document.getElementById('userInfo');
+            box.style.display = 'block';
+            box.innerText = `👤 ${user.ad} | ${user.arac} (${user.yil})`;
+        }
+    });
+</script>
+</html>

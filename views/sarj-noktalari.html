@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ŞARJ Ücretleri ve Noktaları</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon-green: #2ecc71; --dark-bg: #000; --card-bg: rgba(15, 15, 15, 0.98); }
+        body { font-family: 'Montserrat', sans-serif; background: var(--dark-bg); color: #fff; height: 100vh; margin: 0; overflow: hidden; }
+        .navbar { background: #000; border-bottom: 2px solid var(--neon-green); height: 80px; }
+        .navbar-brand { font-size: 2.5rem !important; letter-spacing: 8px; font-weight: 900; color: #fff !important; }
+        .main-container { height: calc(100vh - 80px); padding: 25px; }
+        .glass-card { background: var(--card-bg); border: 3px solid var(--neon-green); border-radius: 30px; height: 100%; display: flex; flex-direction: column; padding: 30px; }
+        .neon-title { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); font-weight: 900; font-size: 2.2rem; text-align: center; margin-bottom: 20px; }
+        .price-table-container { flex: 1; overflow-y: auto; padding-right: 10px; scrollbar-width: thin; scrollbar-color: var(--neon-green) #111; }
+        .custom-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        .custom-table td { background: #111; font-size: 1.1rem; font-weight: 700; padding: 12px; border: none; }
+        .price-val { color: var(--neon-green); font-weight: 900; text-align: right; }
+        .nav-pills .nav-link { color: #fff; border: 2px solid #333; margin: 0 10px; border-radius: 50px; font-weight: 700; }
+        .nav-pills .nav-link.active { background: var(--neon-green); color: #000; }
+        .map-box { flex: 1; border-radius: 25px; background: #0a0a0a; border: 2px dashed #444; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .map-btn { font-size: 1.5rem; font-weight: 900; background: var(--neon-green); color: #000; padding: 15px 40px; border-radius: 50px; text-decoration: none; margin-top: 20px; transition: 0.3s; }
+        .map-btn:hover { background: #27ae60; color: #fff; transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark p-2 px-5 d-flex justify-content-between align-items-center">
+    <a class="navbar-brand text-decoration-none" href="index.html">⚡ ŞARJ</a>
+    <a href="index.html" class="btn btn-lg btn-outline-success rounded-pill px-5 fw-bold">ANA SAYFA</a>
+</nav>
+<div class="container-fluid main-container">
+    <div class="row h-100 g-4">
+        <div class="col-lg-6 h-100">
+            <div class="glass-card">
+                <div class="neon-title">ŞARJ ÜCRETLERİ</div>
+                <ul class="nav nav-pills justify-content-center mb-4">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#dc-tab">DC (HIZLI)</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#ac-tab">AC (NORMAL)</button></li>
+                </ul>
+                <div class="tab-content price-table-container">
+                    <div class="tab-pane fade show active" id="dc-tab"><div id="dc-list"></div></div>
+                    <div class="tab-pane fade" id="ac-tab"><div id="ac-list"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 h-100">
+            <div class="glass-card">
+                <div class="neon-title">ŞARJ NOKTALARI</div>
+                <div class="map-box">
+                    <div style="font-size: 5rem;">📍</div>
+                    <h2 class="fw-bold mt-3">İSTASYON HARİTASI</h2>
+                    <p class="text-secondary px-4 fs-5">Türkiye genelindeki tüm aktif şarj noktalarını görmek için haritayı açın.</p>
+                    <a href="https://www.chargeiq.com.tr/tr/sarj-istasyonu-haritasi" target="_blank" class="map-btn">HARİTAYI GÖRÜNTÜLE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const dcData = [
+        {n: "Bladeco", p: "7.43"}, {n: "Multiforce DC-3", p: "8.39"}, {n: "Ecobox / K Şarj (<80)", p: "8.50"},
+        {n: "K Şarj (>80) / Miggo", p: "8.90"}, {n: "Astor / Sharz (<60)", p: "8.99"}, {n: "Tesla Supercharger", p: "9.40"},
+        {n: "Onlife (<60)", p: "9.49"}, {n: "Voltgo", p: "9.75"}, {n: "Trugo (<150)", p: "10.60"},
+        {n: "Zes (<180)", p: "10.99"}, {n: "En Yakıt", p: "11.80"}, {n: "Shell Recharge", p: "11.99"}
+    ];
+    const acData = [
+        {n: "Multiforce AC-2", p: "5.76"}, {n: "Bladeco", p: "5.90"}, {n: "Multiforce AC-3", p: "5.99"},
+        {n: "ecobox (< 20)", p: "6.00"}, {n: "Astor / Onlife", p: "6.49"}, {n: "ecobox (> 20)", p: "6.50"},
+        {n: "Multiforce AC", p: "6.50"}, {n: "Voltgo", p: "6.99"}, {n: "K Şarj", p: "7.49"},
+        {n: "Miggo", p: "7.50"}, {n: "Gio EV", p: "7.77"}, {n: "Sharz", p: "7.99"},
+        {n: "Aksa / Trugo", p: "8.49"}, {n: "eŞarj", p: "8.90"}, {n: "Zes / Wat", p: "8.99"},
+        {n: "Voltrun AC-2", p: "9.29"}, {n: "Otojet (> 11)", p: "9.49"}, {n: "Shell Recharge", p: "11.99"}
+    ];
+
+    function renderList(data, targetId) {
+        const container = document.getElementById(targetId);
+        if(!container) return;
+        let html = '<table class="custom-table">';
+        data.forEach(item => {
+            html += `<tr><td style="border-radius: 15px 0 0 15px;">${item.n}</td><td class="price-val" style="border-radius: 0 15px 15px 0;">₺${item.p}</td></tr>`;
+        });
+        html += '</table>';
+        container.innerHTML = html;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        renderList(dcData, 'dc-list');
+        renderList(acData, 'ac-list');
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
