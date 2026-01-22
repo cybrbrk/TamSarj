@@ -2,63 +2,57 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Garaj Kaydı | TamŞarj</title>
+<title>TamŞarj Garaj</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
 <style>
-body { background: #cfd8dc; font-family: 'Montserrat', sans-serif; padding: 40px; }
-.card { max-width: 600px; margin: auto; padding: 40px; border-radius: 30px; background: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-.car-grid { max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 15px; margin-bottom: 20px; background: #f9f9f9; padding: 10px; }
-.car-option { padding: 10px; cursor: pointer; border-radius: 10px; margin-bottom: 5px; transition: 0.3s; }
-.car-option:hover { background: #e3f2fd; }
-.car-option.active { background: #2ecc71; color: white; font-weight: bold; }
+body { background: #eee; padding: 20px; font-family: sans-serif; }
+.card { max-width: 500px; margin: auto; padding: 20px; border-radius: 15px; }
+.item { border-bottom: 1px solid #ddd; padding: 10px 0; display: flex; justify-content: space-between; }
 </style>
 </head>
-<body onload="yukle()">
-<div class="card">
-<h2 class="fw-bold text-center mb-4">GARAJA ARAÇ EKLE</h2>
-<input type="text" id="ad" class="form-control mb-3 p-3" placeholder="Sürücü Adı Soyadı">
-<input type="text" id="plaka" class="form-control mb-3 p-3" placeholder="Plaka Örn: 34 EV 2026">
-<label class="fw-bold mb-2">Model Seçiniz:</label>
-<div class="car-grid" id="carGrid"></div>
-<button onclick="kaydet()" class="btn btn-dark w-100 py-3 rounded-pill fw-bold">BİLGİLERİ GÜNCELLE VE DÖN</button>
+<body>
+<div class="card bg-white shadow">
+<h4 class="fw-bold text-center">GARAJA ARAÇ EKLE</h4>
+<input type="hidden" id="editId">
+<input type="text" id="ad" class="form-control mb-2" placeholder="Ad Soyad">
+<input type="text" id="plaka" class="form-control mb-2" placeholder="Plaka">
+<select id="arac" class="form-select mb-2">
+<option value="Tesla Model Y">Tesla Model Y</option>
+<option value="Togg T10X">Togg T10X</option>
+<option value="BMW i4">BMW i4</option>
+</select>
+<button id="btn" onclick="islem()" class="btn btn-primary w-100">KAYDET</button>
+<div id="liste" class="mt-4"></div>
 </div>
 <script>
-const cars = ["Tesla Model Y", "Togg T10X", "Porsche Taycan", "Hyundai IONIQ 5", "BMW i4", "Mercedes EQS", "Audi Q4 e-tron", "Kia EV6", "Volvo XC40 Recharge", "Renault Zoe", "Skywell ET5", "MG4 Electric", "Fiat 500e"];
-let seciliArac = "";
-const grid = document.getElementById('carGrid');
-cars.forEach(car => {
-    const d = document.createElement('div');
-    d.className = 'car-option';
-    d.innerText = car;
-    d.onclick = () => {
-        seciliArac = car;
-        document.querySelectorAll('.car-option').forEach(x => x.classList.remove('active'));
-        d.classList.add('active');
-    };
-    grid.appendChild(d);
+let veri = [];
+function listele() {
+const div = document.getElementById('liste');
+div.innerHTML = '<b>Kayıtlı Araçlar:</b>';
+veri.forEach((item, i) => {
+div.innerHTML += `<div class="item">
+<span>${item.ad} - ${item.arac} (${item.plaka})</span>
+<small>
+<a href="#" onclick="duzenle(${i})">Düzelt</a> | 
+<a href="#" onclick="sil(${i})" class="text-danger">Sil</a>
+</small></div>`;
 });
-function yukle() {
-    fetch('/api/kullanici').then(r => r.json()).then(data => {
-        if(data.ad) {
-            document.getElementById('ad').value = data.ad;
-            document.getElementById('plaka').value = data.plaka;
-            seciliArac = data.arac;
-            document.querySelectorAll('.car-option').forEach(opt => {
-                if(opt.innerText === data.arac) opt.classList.add('active');
-            });
-        }
-    });
 }
-function kaydet() {
-    const ad = document.getElementById('ad').value;
-    const plaka = document.getElementById('plaka').value;
-    if(!ad || !seciliArac || !plaka) return alert("Eksik bilgi!");
-    fetch('/api/kaydet', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ ad, arac: seciliArac, plaka })
-    }).then(() => window.location.href = "/");
+function islem() {
+const obj = { ad: document.getElementById('ad').value, plaka: document.getElementById('plaka').value, arac: document.getElementById('arac').value };
+const id = document.getElementById('editId').value;
+if(id === "") { veri.push(obj); } else { veri[id] = obj; document.getElementById('editId').value = ""; }
+document.getElementById('ad').value = ""; document.getElementById('plaka').value = "";
+document.getElementById('btn').innerText = "KAYDET";
+listele();
+}
+function sil(i) { veri.splice(i, 1); listele(); }
+function duzenle(i) {
+document.getElementById('editId').value = i;
+document.getElementById('ad').value = veri[i].ad;
+document.getElementById('plaka').value = veri[i].plaka;
+document.getElementById('arac').value = veri[i].arac;
+document.getElementById('btn').innerText = "GÜNCELLE";
 }
 </script>
 </body>
